@@ -24,6 +24,8 @@ def proof_of_work(last_proof):
     print("Searching for next proof")
     proof = 0
     #  TODO: Your code here
+    while valid_proof(last_proof, proof):
+        proof += 1
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -38,7 +40,14 @@ def valid_proof(last_hash, proof):
     """
 
     # TODO: Your code here!
-    pass
+    guess = f"{last_hash}{proof}".encode()
+    # hashing the guess
+    guess_hash = hashlib.sha256(guess).hexdigest()
+
+    # return True if the last 4 digits of the hash ar zreos
+    print('last guess', last_hash)
+    print('new guess', guess_hash[:6])
+    # return guess_hash[:6] == last_hash[-6:]
 
 
 if __name__ == '__main__':
@@ -69,13 +78,13 @@ if __name__ == '__main__':
         data = r.json()
         new_proof = proof_of_work(data.get('proof'))
 
-        post_data = {"proof": new_proof,
-                     "id": id}
+        # post_data = {"proof": new_proof,
+        #              "id": id}
 
-        r = requests.post(url=node + "/mine", json=post_data)
-        data = r.json()
-        if data.get('message') == 'New Block Forged':
-            coins_mined += 1
-            print("Total coins mined: " + str(coins_mined))
-        else:
-            print(data.get('message'))
+        # r = requests.post(url=node + "/mine", json=post_data)
+        # data = r.json()
+        # if data.get('message') == 'New Block Forged':
+        #     coins_mined += 1
+        #     print("Total coins mined: " + str(coins_mined))
+        # else:
+        #     print(data.get('message'))
